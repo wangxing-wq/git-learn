@@ -19,16 +19,17 @@ public class BookController {
     
     @GetMapping
     public ResponseEntity<List<Book>> getAllBooks() {
-        log.info("Getting all books");
+        log.info("Fetching all books");
         List<Book> books = bookService.getAllBooks();
         return ResponseEntity.ok(books);
     }
     
     @GetMapping("/{id}")
     public ResponseEntity<Book> getBookById(@PathVariable Long id) {
-        log.info("Getting book with ID: {}", id);
+        log.info("Fetching book by ID: {}", id);
         Book book = bookService.getBookById(id);
         if (book != null) {
+            log.info("Book found: {}", book);
             return ResponseEntity.ok(book);
         } else {
             log.info("Book not found with ID: {}", id);
@@ -40,18 +41,13 @@ public class BookController {
     public ResponseEntity<Book> createBook(@RequestBody Book book) {
         log.info("Creating book: {}", book);
         Book createdBook = bookService.createBook(book);
+        log.info("Book created: {}", createdBook);
         return ResponseEntity.status(201).body(createdBook);
     }
     
     @PutMapping("/{id}")
     public ResponseEntity<Book> updateBook(@PathVariable Long id, @RequestBody Book book) {
         log.info("Updating book with ID {}: {}", id, book);
-        
-        // Simulate some business logic
-        if (book.getTitle() != null) {
-            book.setTitle(book.getTitle().toUpperCase());
-        }
-        
         Book updatedBook = bookService.updateBook(id, book);
         if (updatedBook != null) {
             log.info("Book updated: {}", updatedBook);
@@ -67,6 +63,7 @@ public class BookController {
         log.info("Deleting book with ID: {}", id);
         boolean deleted = bookService.deleteBook(id);
         if (deleted) {
+            log.info("Book deleted with ID: {}", id);
             return ResponseEntity.noContent().build();
         } else {
             log.info("Book not found with ID: {}", id);
